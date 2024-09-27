@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Usando Picker externo
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 // Definir as cores das fibras e tubos para os padrões EIA598-A e ABNT (corrigido)
 const fiberColorsEIA598 = ['Azul', 'Laranja', 'Verde', 'Marrom', 'Cinza', 'Branco', 'Vermelho', 'Preto', 'Amarelo', 'Violeta', 'Rosa', 'Aqua'];
 
@@ -11,7 +11,7 @@ const fiberColorsEIA598 = ['Azul', 'Laranja', 'Verde', 'Marrom', 'Cinza', 'Branc
 const fiberColorsABNT = ['Verde', 'Amarelo', 'Branco', 'Azul', 'Vermelho', 'Violeta', 'Marrom', 'Rosa', 'Preto', 'Cinza', 'Laranja', 'Aqua'];
 
 const tubeColorsABNT = fiberColorsABNT; // Usando as mesmas cores para os tubos
-const abntFiberColorsHex = [
+const fiberColorsHexAbnt = [
     '#008000', // Verde
     '#FFFF00', // Amarela
     '#FFFFFF', // Branco
@@ -23,6 +23,21 @@ const abntFiberColorsHex = [
     '#000000', // Preto
     '#808080', // Cinza
     '#FFA500', // Laranja
+    '#000080'  // Azul Marinho
+];
+
+const fiberColorsHexEia598A = [
+    '#0000FF', // Azul
+    '#FFA500', // Laranja
+    '#008000', // Verde
+    '#A52A2A', // Marrom
+    '#808080', // Cinza
+    '#FFFFFF', // Branco
+    '#FF0000', // Vermelho
+    '#000000', // Preto
+    '#FFFF00', // Amarela
+    '#800080', // Lilás
+    '#FFC0CB', // Rosa
     '#000080'  // Azul Marinho
 ];
 
@@ -108,15 +123,37 @@ const Index = () => {
 
             <BottomSheet
                 ref={bottomSheetRef}
-                snapPoints={[0.1, '20%', '50%', '80%']}
+                snapPoints={[0.1, '20%', '50%', '90%']}
                 backgroundStyle={{ backgroundColor: colors['violet-950'] }}
             >
                 <BottomSheetView className='p-4'>
-                    <View>
-                        <Text className='font-bold text-violet-100 text-2xl'>Fibra: {fiberColor}</Text>
-                        <Text className='font-bold text-violet-100 text-2xl'>Tubo: {tubeColor}</Text>
-                    </View>
+                    <Text className='text-white py-4 font-semibold text-xl'>Padrão {selectedStandard}</Text>
+                    <FlatList
+                        contentContainerClassName='flex-row gap-2'
+                        data={selectedStandard === 'ABNT' ? fiberColorsHexAbnt : fiberColorsHexEia598A}
+                        horizontal
+                        renderItem={({ item, index }) => (
+                            <View>
+                                <View style={{ backgroundColor: item }} className='w-12 h-12 rounded-full' />
+                            </View>
+                        )}
+                    />
 
+                    <View className='flex-row gap-3 justify-center my-6'>
+                        <View className='items-center justify-center border-4 w-48 h-48 border-lime-500 rounded-full'>
+                            <Text className='text-[96px] text-white font-black'>{fiberNumber}</Text>
+                        </View>
+                    </View>
+                    <View className='gap-3'>
+                        <View className='flex-row items-center gap-3'>
+                            <View className='h-4 w-4 bg-slate-500' />
+                            <Text className='text-xl text-white font-black'>Fibra: {fiberColor}</Text>
+                        </View>
+                        <View className='flex-row items-center gap-3'>
+                            <View className='h-4 w-4 bg-lime-500' />
+                            <Text className='text-xl text-white font-black'>TuboLoose: {tubeColor}</Text>
+                        </View>
+                    </View>
                 </BottomSheetView>
             </BottomSheet>
         </View>
