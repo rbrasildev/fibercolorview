@@ -1,7 +1,9 @@
+import { colors } from '../styles/colors';
 import React, { useState, useRef } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Usando Picker externo
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { ScrollView } from 'react-native-gesture-handler';
 // Definir as cores das fibras e tubos para os padrões EIA598-A e ABNT (corrigido)
 const fiberColorsEIA598 = ['Azul', 'Laranja', 'Verde', 'Marrom', 'Cinza', 'Branco', 'Vermelho', 'Preto', 'Amarelo', 'Violeta', 'Rosa', 'Aqua'];
 
@@ -28,12 +30,13 @@ const Index = () => {
     const [fiberNumber, setFiberNumber] = useState<string>('');
     const [fiberColor, setFiberColor] = useState<string | null>(null);
     const [tubeColor, setTubeColor] = useState<string | null>(null);
-    const [selectedStandard, setSelectedStandard] = useState<'EIA598-A' | 'ABNT'>('EIA598-A');
+    const [selectedStandard, setSelectedStandard] = useState<'EIA598-A' | 'ABNT'>('ABNT');
     const [fiberCountPerTube, setFiberCountPerTube] = useState<number>(12);
     const [colorHexa, setColorHexa] = useState<number | null>(null)
 
+
     const bottomSheetRef = useRef<BottomSheet>(null);
-    // Função para verificar a fibra de acordo com o padrão selecionado e quantidade de fibras por tubo
+
     const handleCheckFiber = () => {
         const fiberNum = parseInt(fiberNumber);
 
@@ -43,11 +46,9 @@ const Index = () => {
             return;
         }
 
-        // Escolher o padrão baseado na seleção do usuário
         const fiberColors = selectedStandard === 'EIA598-A' ? fiberColorsEIA598 : fiberColorsABNT;
         const tubeColors = selectedStandard === 'EIA598-A' ? fiberColorsEIA598 : tubeColorsABNT;
 
-        // Calcular o índice com base na quantidade de fibras por tubo
         const fiberIndex = (fiberNum - 1) % fiberCountPerTube;
         const tubeIndex = Math.floor((fiberNum - 1) / fiberCountPerTube);
 
@@ -58,64 +59,62 @@ const Index = () => {
     };
 
 
-
     return (
-        <View className='p-4 mt-5 flex-1'>
-            <View className='flex-row items-center'>
-                <Image className='w-32 h-32' source={require('@/assets/images/LOGO.png')} />
-                <Text className='font-bold text-2xl'>Fiber Color View</Text>
+        <View className='flex-1'>
+            <View className='flex-row bg-violet-950 p-5 justify-between'>
+                <Image className='w-16 h-16' source={require('@/assets/images/LOGO.png')} />
+                <Text className='flex-1 font-light uppercase self-center text-3xl text-violet-500 py-6'>FIBER COLOR VIEW</Text>
             </View>
 
-            <View>
-                <Text className='font-light'>Escolha o padrão:</Text>
-                <Picker
-                    selectedValue={selectedStandard}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setSelectedStandard(itemValue as 'EIA598-A' | 'ABNT')}
-                >
-                    <Picker.Item label="Padrão EIA598-A" value="EIA598-A" />
-                    <Picker.Item label="Padrão ABNT" value="ABNT" />
-                </Picker>
+            <ScrollView className='mt-2 p-6'>
+                <Text className='font-light text-violet-500 text-lg'>Escolha o padrão:</Text>
+                <View className='border-[0.5px] border-violet-100 rounded-3xl'>
+                    <Picker
+                        selectedValue={selectedStandard}
+                        onValueChange={(itemValue) => setSelectedStandard(itemValue as 'EIA598-A' | 'ABNT')}
+                    >
+                        <Picker.Item style={{ color: colors['violet-100'] }} label="Padrão ABNT" value="ABNT" />
+                        <Picker.Item style={{ color: colors['violet-100'] }} label="Padrão EIA598-A" value="EIA598-A" />
+                    </Picker>
+                </View>
 
-                <Text className='font-light'>Escolha a quantidade de fibras por tubo:</Text>
-                <Picker
-                    selectedValue={fiberCountPerTube}
-                    style={styles.picker}
-                    onValueChange={(itemValue) => setFiberCountPerTube(itemValue)}
-                >
-                    <Picker.Item label="6 fibras por tubo" value={6} />
-                    <Picker.Item label="12 fibras por tubo" value={12} />
-                    <Picker.Item label="24 fibras por tubo" value={24} />
-                </Picker>
+                <Text className='font-light text-violet-100 text-lg mt-4'>Escolha a quantidade de fibras por tubo:</Text>
+                <View className='border-[0.5px] border-violet-100 rounded-3xl'>
+                    <Picker
+                        selectedValue={fiberCountPerTube}
+                        onValueChange={(itemValue) => setFiberCountPerTube(itemValue)}
+                    >
+                        <Picker.Item style={{ color: colors['violet-100'], fontWeight: '700' }} label="06 Fibras" value={6} />
+                        <Picker.Item style={{ color: colors['violet-100'], fontWeight: '700' }} label="12 Fibras" value={12} />
+                        <Picker.Item style={{ color: colors['violet-100'], fontWeight: '700' }} label="24 Fibras" value={24} />
+                    </Picker>
+                </View>
 
+                <Text className='font-light text-violet-100 text-lg mt-4'>Digite o número da fibra</Text>
                 <TextInput
-                    className='border border-slate-400  font-bold text-center rounded-3xl my-2 p-4'
-                    placeholder="Digite o número da fibra"
-                    placeholderClassName='text-gray-500 font-semibold'
+                    className='border-[0.5px] border-violet-100/75 bg-white text-violet-900 font-normal text-xl text-center rounded-3xl my-2 p-4'
+                    placeholderClassName='text-gray-500 font-thin'
                     keyboardType="numeric"
                     value={fiberNumber}
                     onChangeText={setFiberNumber}
+
                 />
                 <TouchableOpacity
                     style={styles.button}
                     onPress={handleCheckFiber}>
-                    <Text className='font-bold'>Verificar</Text>
+                    <Text className='font-bold text-white'>Verificar</Text>
                 </TouchableOpacity>
-            </View>
-
-
-
-
+            </ScrollView>
 
             <BottomSheet
                 ref={bottomSheetRef}
-                snapPoints={[0.1, '30%', '40%']}
-                backgroundStyle={{ backgroundColor: abntFiberColorsHex[colorHexa] }}
+                snapPoints={[0.1, '20%', '50%', '80%']}
+                backgroundStyle={{ backgroundColor: colors['violet-950'] }}
             >
                 <BottomSheetView className='p-4'>
                     <View>
-                        <Text className='font-bold text-2xl'>Fibra: {fiberColor}</Text>
-                        <Text className='font-bold text-2xl'>Tubo: {tubeColor}</Text>
+                        <Text className='font-bold text-violet-100 text-2xl'>Fibra: {fiberColor}</Text>
+                        <Text className='font-bold text-violet-100 text-2xl'>Tubo: {tubeColor}</Text>
                     </View>
 
                 </BottomSheetView>
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#ddd',
+        backgroundColor: colors['violet-900'],
         borderRadius: 20,
     },
     title: {
@@ -146,19 +145,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 10,
     },
-    picker: {
-        height: 50,
-        width: '100%',
-        marginBottom: 20,
-        backgroundColor: '#fff',
-    },
 
-    result: {
-        marginTop: 20,
-    },
-    resultText: {
-        fontSize: 18,
-    },
 });
 
 export default Index;

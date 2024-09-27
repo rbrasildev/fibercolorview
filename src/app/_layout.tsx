@@ -17,6 +17,9 @@ import {
 
 // Import your global CSS file
 import "@/src/styles/global.css"
+import { StatusBar } from "react-native";
+import { colors } from "../styles/colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
     const [loaded, error] = useFonts({
@@ -40,8 +43,11 @@ export default function Layout() {
         return null;
     }
     return (
-        <GestureHandlerRootView style={{ flex: 1, backgroundColor:'#eee' }}>
-            <Slot />
+        <GestureHandlerRootView>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <StatusBar backgroundColor={'#120A1A'} barStyle='light-content' translucent />
+                <Slot />
+            </SafeAreaView>
         </GestureHandlerRootView>
     )
 }
