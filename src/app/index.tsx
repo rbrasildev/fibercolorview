@@ -4,7 +4,7 @@ import { View, TextInput, Button, Text, StyleSheet, Image, TouchableOpacity } fr
 import { Picker } from '@react-native-picker/picker'; // Usando Picker externo
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-// Definir as cores das fibras e tubos para os padrões EIA598-A e ABNT (corrigido)
+import * as Animatable from 'react-native-animatable';
 const fiberColorsEIA598 = ['Azul', 'Laranja', 'Verde', 'Marrom', 'Cinza', 'Branco', 'Vermelho', 'Preto', 'Amarelo', 'Violeta', 'Rosa', 'Aqua'];
 
 // Padrão ABNT (Corrigido)
@@ -73,7 +73,6 @@ const Index = () => {
         bottomSheetRef.current?.expand()
     };
 
-
     return (
         <View className='flex-1'>
             <View className='flex-row bg-violet-950 p-5 justify-between'>
@@ -129,13 +128,14 @@ const Index = () => {
                 <BottomSheetView className='p-4'>
                     <Text className='text-white py-4 font-semibold text-xl'>Padrão {selectedStandard}</Text>
                     <FlatList
+                        alwaysBounceHorizontal
                         contentContainerClassName='flex-row gap-2'
                         data={selectedStandard === 'ABNT' ? fiberColorsHexAbnt : fiberColorsHexEia598A}
                         horizontal
                         renderItem={({ item, index }) => (
-                            <View>
-                                <View style={{ backgroundColor: item }} className='w-12 h-12 rounded-full' />
-                            </View>
+                            <Animatable.View delay={index * 300} animation={'slideInRight'}>
+                                {fiberColorsABNT.indexOf(fiberColor) === index ? <View style={{ backgroundColor: item }} className='w-32 h-8' /> : <View style={{ backgroundColor: item }} className='w-8 h-8' />}
+                            </Animatable.View>
                         )}
                     />
 
