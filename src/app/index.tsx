@@ -4,41 +4,43 @@ import { View, TextInput, Button, Text, StyleSheet, Image, TouchableOpacity } fr
 import { Picker } from '@react-native-picker/picker'; // Usando Picker externo
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
-import * as Animatable from 'react-native-animatable';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import * as Animatable from 'react-native-animatable'
+
 const fiberColorsEIA598 = ['Azul', 'Laranja', 'Verde', 'Marrom', 'Cinza', 'Branco', 'Vermelho', 'Preto', 'Amarelo', 'Violeta', 'Rosa', 'Aqua'];
 
-// Padrão ABNT (Corrigido)
 const fiberColorsABNT = ['Verde', 'Amarelo', 'Branco', 'Azul', 'Vermelho', 'Violeta', 'Marrom', 'Rosa', 'Preto', 'Cinza', 'Laranja', 'Aqua'];
 
-const tubeColorsABNT = fiberColorsABNT; // Usando as mesmas cores para os tubos
+const tubeColorsABNT = fiberColorsABNT;
 const fiberColorsHexAbnt = [
-    '#008000', // Verde
-    '#FFFF00', // Amarela
-    '#FFFFFF', // Branco
-    '#0000FF', // Azul
-    '#FF0000', // Vermelho
-    '#800080', // Lilás
-    '#A52A2A', // Marrom
-    '#FFC0CB', // Rosa
-    '#000000', // Preto
-    '#808080', // Cinza
-    '#FFA500', // Laranja
-    '#000080'  // Azul Marinho
+    '#008000', 
+    '#FFFF00', 
+    '#FFFFFF', 
+    '#0000FF', 
+    '#FF0000', 
+    '#800080', 
+    '#A52A2A', 
+    '#FFC0CB', 
+    '#000000', 
+    '#808080', 
+    '#FFA500', 
+    '#000080'  
 ];
 
 const fiberColorsHexEia598A = [
-    '#0000FF', // Azul
-    '#FFA500', // Laranja
-    '#008000', // Verde
-    '#A52A2A', // Marrom
-    '#808080', // Cinza
-    '#FFFFFF', // Branco
-    '#FF0000', // Vermelho
-    '#000000', // Preto
-    '#FFFF00', // Amarela
-    '#800080', // Lilás
-    '#FFC0CB', // Rosa
-    '#000080'  // Azul Marinho
+    '#0000FF', 
+    '#FFA500', 
+    '#008000', 
+    '#A52A2A', 
+    '#808080', 
+    '#FFFFFF', 
+    '#FF0000', 
+    '#000000', 
+    '#FFFF00', 
+    '#800080', 
+    '#FFC0CB', 
+    '#000080' 
 ];
 
 const Index = () => {
@@ -48,6 +50,8 @@ const Index = () => {
     const [selectedStandard, setSelectedStandard] = useState<'EIA598-A' | 'ABNT'>('ABNT');
     const [fiberCountPerTube, setFiberCountPerTube] = useState<number>(12);
     const [colorHexa, setColorHexa] = useState<number | null>(null)
+    const [fiberIndex, setFiberIndex] = useState<number | null>(null)
+    const [tubeIndex, setTubeIndex] = useState<number | null>(null)
 
 
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -67,8 +71,12 @@ const Index = () => {
         const fiberIndex = (fiberNum - 1) % fiberCountPerTube;
         const tubeIndex = Math.floor((fiberNum - 1) / fiberCountPerTube);
 
+        setFiberIndex(fiberIndex)
+        setTubeIndex(tubeIndex + 1)
+
         setFiberColor(fiberColors[fiberIndex]);
         setTubeColor(tubeColors[tubeIndex]);
+
         setColorHexa(fiberIndex)
         bottomSheetRef.current?.expand()
     };
@@ -80,9 +88,9 @@ const Index = () => {
                 <Text className='flex-1 font-light uppercase self-center text-3xl text-violet-500 py-6'>FIBER COLOR VIEW</Text>
             </View>
 
-            <ScrollView className='mt-2 p-6'>
-                <Text className='font-light text-violet-500 text-lg'>Escolha o padrão:</Text>
-                <View className='border-[0.5px] border-violet-100 rounded-3xl'>
+            <ScrollView className='p-6 bg-violet-950'>
+                <Text className='font-semibold text-violet-200  text-lg'>Escolha o padrão</Text>
+                <View className='border-[0.5px] border-violet-200 rounded-3xl'>
                     <Picker
                         selectedValue={selectedStandard}
                         onValueChange={(itemValue) => setSelectedStandard(itemValue as 'EIA598-A' | 'ABNT')}
@@ -92,8 +100,8 @@ const Index = () => {
                     </Picker>
                 </View>
 
-                <Text className='font-light text-violet-100 text-lg mt-4'>Escolha a quantidade de fibras por tubo:</Text>
-                <View className='border-[0.5px] border-violet-100 rounded-3xl'>
+                <Text className='font-semibold text-violet-200  text-lg mt-4'>Escolha a quantidade de fibras por tubo</Text>
+                <View className='border-[0.5px] border-violet-200 rounded-3xl'>
                     <Picker
                         selectedValue={fiberCountPerTube}
                         onValueChange={(itemValue) => setFiberCountPerTube(itemValue)}
@@ -104,10 +112,10 @@ const Index = () => {
                     </Picker>
                 </View>
 
-                <Text className='font-light text-violet-100 text-lg mt-4'>Digite o número da fibra</Text>
+                <Text className='font-semibold text-violet-200 text-lg mt-4'>Digite o número da fibra</Text>
                 <TextInput
-                    className='border-[0.5px] border-violet-100/75 bg-white text-violet-900 font-normal text-xl text-center rounded-3xl my-2 p-4'
-                    placeholderClassName='text-gray-500 font-thin'
+                    className='transparent text-[64px] text-white font-thin text-center rounded-3xl my-2 p-4'
+                    placeholder='00'
                     keyboardType="numeric"
                     value={fiberNumber}
                     onChangeText={setFiberNumber}
@@ -116,6 +124,7 @@ const Index = () => {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={handleCheckFiber}>
+                    <MaterialCommunityIcons color={'#fff'} size={16} name='note-search' />
                     <Text className='font-bold text-white'>Verificar</Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -123,7 +132,7 @@ const Index = () => {
             <BottomSheet
                 ref={bottomSheetRef}
                 snapPoints={[0.1, '20%', '50%', '90%']}
-                backgroundStyle={{ backgroundColor: colors['violet-950'] }}
+                backgroundStyle={{ backgroundColor: colors['violet-900'] }}
             >
                 <BottomSheetView className='p-4'>
                     <Text className='text-white py-4 font-semibold text-xl'>Padrão {selectedStandard}</Text>
@@ -133,14 +142,18 @@ const Index = () => {
                         data={selectedStandard === 'ABNT' ? fiberColorsHexAbnt : fiberColorsHexEia598A}
                         horizontal
                         renderItem={({ item, index }) => (
-                            <Animatable.View delay={index * 300} animation={'slideInRight'}>
-                                {fiberColorsABNT.indexOf(fiberColor) === index ? <View style={{ backgroundColor: item }} className='w-32 h-8' /> : <View style={{ backgroundColor: item }} className='w-8 h-8' />}
-                            </Animatable.View>
+                            <View className='justify-center'>
+                                {fiberIndex === index ?
+                                    <View style={{ backgroundColor: item }} className='w-16 h-16 border-2 border-white rounded-full' />
+                                    :
+                                    <View style={{ backgroundColor: item }} className='w-6 h-6 border-2 border-white rounded-full' />
+                                }
+                            </View>
                         )}
                     />
 
                     <View className='flex-row gap-3 justify-center my-6'>
-                        <View className='items-center justify-center border-4 w-48 h-48 border-lime-500 rounded-full'>
+                        <View className='items-center justify-center border-4 w-56 h-56 p-4 border-lime-500 rounded-full'>
                             <Text className='text-[96px] text-white font-black'>{fiberNumber}</Text>
                         </View>
                     </View>
@@ -149,9 +162,11 @@ const Index = () => {
                             <View className='h-4 w-4 bg-slate-500' />
                             <Text className='text-xl text-white font-black'>Fibra: {fiberColor}</Text>
                         </View>
-                        <View className='flex-row items-center gap-3'>
-                            <View className='h-4 w-4 bg-lime-500' />
-                            <Text className='text-xl text-white font-black'>TuboLoose: {tubeColor}</Text>
+                        <View className='flex-row items-center justify-start gap-3'>
+                            <View style={{ backgroundColor: fiberColorsHexAbnt.indexOf(tubeColor) }} className='p-2 w-12 h-12 bg-lime-500 rounded-full items-center justify-center'>
+                                <Text className='font-bold text-white text-2xl'>{tubeIndex}</Text>
+                            </View>
+                            <Text className='text-xl text-white font-black'>TuboLoose: {tubeIndex}</Text>
                         </View>
                     </View>
                 </BottomSheetView>
@@ -161,27 +176,16 @@ const Index = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
     button: {
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
         backgroundColor: colors['violet-900'],
         borderRadius: 20,
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
-    label: {
-        fontSize: 18,
-        marginBottom: 10,
-    },
+        gap: 2,
+
+    }
 
 });
 
