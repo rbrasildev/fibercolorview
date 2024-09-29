@@ -1,47 +1,13 @@
 import { colors } from '../styles/colors';
 import React, { useState, useRef } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // Usando Picker externo
+import { Picker } from '@react-native-picker/picker';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import * as Animatable from 'react-native-animatable'
+import { fiberColorsEIA598, fiberColorsABNT, tubeColorsABNT, fiberColorsHexAbnt, fiberColorsHexEia598A } from '../consts/fiber';
 
-const fiberColorsEIA598 = ['Azul', 'Laranja', 'Verde', 'Marrom', 'Cinza', 'Branco', 'Vermelho', 'Preto', 'Amarelo', 'Violeta', 'Rosa', 'Aqua'];
-
-const fiberColorsABNT = ['Verde', 'Amarelo', 'Branco', 'Azul', 'Vermelho', 'Violeta', 'Marrom', 'Rosa', 'Preto', 'Cinza', 'Laranja', 'Aqua'];
-
-const tubeColorsABNT = fiberColorsABNT;
-const fiberColorsHexAbnt = [
-    '#008000', 
-    '#FFFF00', 
-    '#FFFFFF', 
-    '#0000FF', 
-    '#FF0000', 
-    '#800080', 
-    '#A52A2A', 
-    '#FFC0CB', 
-    '#000000', 
-    '#808080', 
-    '#FFA500', 
-    '#000080'  
-];
-
-const fiberColorsHexEia598A = [
-    '#0000FF', 
-    '#FFA500', 
-    '#008000', 
-    '#A52A2A', 
-    '#808080', 
-    '#FFFFFF', 
-    '#FF0000', 
-    '#000000', 
-    '#FFFF00', 
-    '#800080', 
-    '#FFC0CB', 
-    '#000080' 
-];
 
 const Index = () => {
     const [fiberNumber, setFiberNumber] = useState<string>('');
@@ -71,6 +37,7 @@ const Index = () => {
         const fiberIndex = (fiberNum - 1) % fiberCountPerTube;
         const tubeIndex = Math.floor((fiberNum - 1) / fiberCountPerTube);
 
+        console.log(fiberIndex)
         setFiberIndex(fiberIndex)
         setTubeIndex(tubeIndex + 1)
 
@@ -131,20 +98,19 @@ const Index = () => {
 
             <BottomSheet
                 ref={bottomSheetRef}
-                snapPoints={[0.1, '20%', '50%', '90%']}
+                snapPoints={[0.1, '25%', '50%', '90%']}
                 backgroundStyle={{ backgroundColor: colors['violet-900'] }}
             >
                 <BottomSheetView className='p-4'>
                     <Text className='text-white py-4 font-semibold text-xl'>Padrão {selectedStandard}</Text>
                     <FlatList
-                        alwaysBounceHorizontal
-                        contentContainerClassName='flex-row gap-2'
+                        contentContainerClassName='flex-row gap-2 py-4'
                         data={selectedStandard === 'ABNT' ? fiberColorsHexAbnt : fiberColorsHexEia598A}
                         horizontal
                         renderItem={({ item, index }) => (
                             <View className='justify-center'>
                                 {fiberIndex === index ?
-                                    <View style={{ backgroundColor: item }} className='w-16 h-16 border-2 border-white rounded-full' />
+                                    <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" style={{ backgroundColor: item }} className='w-16 h-16 border-2 border-white rounded-full' />
                                     :
                                     <View style={{ backgroundColor: item }} className='w-6 h-6 border-2 border-white rounded-full' />
                                 }
@@ -153,7 +119,7 @@ const Index = () => {
                     />
 
                     <View className='flex-row gap-3 justify-center my-6'>
-                        <View className='items-center justify-center border-4 w-56 h-56 p-4 border-lime-500 rounded-full'>
+                        <View className='items-center justify-center w-56 h-56 p-4 border-lime-500 rounded-full'>
                             <Text className='text-[96px] text-white font-black'>{fiberNumber}</Text>
                         </View>
                     </View>
